@@ -36,8 +36,8 @@ runs:
     - ${{ inputs.source-files }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
-    - ${{ inputs.user-email }}
     - ${{ inputs.destination-directory }}
+    - ${{ inputs.user-email }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
     - ${{ inputs.commit-message }}
