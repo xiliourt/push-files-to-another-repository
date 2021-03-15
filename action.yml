@@ -1,8 +1,8 @@
-name: 'Push directory to another repository'
+name: 'Copy files to another repository'
 description: 'Useful to push files to another repository to be used, for example, via github pages'
 inputs:
-  source-directory:
-    description: 'Source directory from the origin directory'
+  source-files:
+    description: 'Files to be pushed to the destination repository. Accepts multiple filenames and globbing.'
     required: true
   destination-github-username:
     description: 'Name of the destination username/organization'
@@ -13,6 +13,10 @@ inputs:
   user-email:
     description: 'Email for the git commit'
     required: true
+  destination-directory:
+    description: '[Opitonal] Directory to copy files into in the destination repository'
+    required: false
+    default: '.'
   destination-repository-username:
     description: '[Optional] Username/organization for the destination repository'
     required: false
@@ -29,10 +33,11 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.source-directory }}
+    - ${{ inputs.source-files }}
     - ${{ inputs.destination-github-username }}
     - ${{ inputs.destination-repository-name }}
     - ${{ inputs.user-email }}
+    - ${{ inputs.destination-directory }}
     - ${{ inputs.destination-repository-username }}
     - ${{ inputs.target-branch }}
     - ${{ inputs.commit-message }}

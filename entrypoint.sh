@@ -4,13 +4,14 @@ set -e  # if a command fails it stops the execution
 set -u  # script fails if trying to access to an undefined variable
 
 echo "Starts"
-SOURCE_DIRECTORY="$1"
+SOURCE_FILES="$1"
 DESTINATION_GITHUB_USERNAME="$2"
 DESTINATION_REPOSITORY_NAME="$3"
 USER_EMAIL="$4"
-DESTINATION_REPOSITORY_USERNAME="$5"
-TARGET_BRANCH="$6"
-COMMIT_MESSAGE="$7"
+DESTINATION_DIRECTORY="$4"
+DESTINATION_REPOSITORY_USERNAME="$6"
+TARGET_BRANCH="$7"
+COMMIT_MESSAGE="$8"
 
 if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
 then
@@ -26,12 +27,10 @@ git config --global user.name "$DESTINATION_GITHUB_USERNAME"
 git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
 ls -la "$CLONE_DIR"
 
-TARGET_DIR=$(mktemp -d)
-mv "$CLONE_DIR/.git" "$TARGET_DIR"
-
 echo "Copying contents to git repo"
-cp -ra "$SOURCE_DIRECTORY"/. "$TARGET_DIR"
-cd "$TARGET_DIR"
+mkdir -p "$CLONE_DIR/$DESTINATION_DIRECTORY"
+cp -rf $SOURCE_FILES "$CLONE_DIR/$DESTINATION_DIRECTORY"
+cd "$CLONE_DIR"
 
 echo "Files that will be pushed"
 ls -la
