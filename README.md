@@ -27,9 +27,9 @@ The username to use for the commit in the destination repository. Defaults to `d
 The email to use for the commit in the destination repository.
 
 ### `commit-message` (argument) [optional]
-The commit message to be used in the output repository. Defaults to "Update from [repository url]@[commit]".
+The commit message to be used in the output repository. Defaults to "Update from [destination url]@[commit]".
 
-The string `ORIGIN_COMMIT` is replaced by `[repository url]@[commit]`.
+The string `ORIGIN_COMMIT` is replaced by `[destination url]@[commit]`.
 
 ### `API_TOKEN_GITHUB` (environment)
 The github api token which allows this action to push to the destination repository.
