@@ -1,39 +1,36 @@
 #!/bin/sh -l
 
-set -e  # if a command fails it stops the execution
-set -u  # script fails if trying to access to an undefined variable
+set -e  # if a command fails exit the script
+set -u  # script fails if trying to access an undefined variable
 
 echo "Starts"
 SOURCE_FILES="$1"
-DESTINATION_GITHUB_USERNAME="$2"
-DESTINATION_REPOSITORY_NAME="$3"
-DESTINATION_DIRECTORY="$4"
-USER_EMAIL="$5"
-DESTINATION_REPOSITORY_USERNAME="$6"
-TARGET_BRANCH="$7"
+DESTINATION_USERNAME="$2"
+DESTINATION_REPOSITORY="$3"
+DESTINATION_BRANCH="$4"
+DESTINATION_DIRECTORY="$5"
+COMMIT_USERNAME="$6"
+COMMIT_EMAIL="$7"
 COMMIT_MESSAGE="$8"
 
-if [ -z "$DESTINATION_REPOSITORY_USERNAME" ]
+if [ -z "$COMMIT_USERNAME" ]
 then
-  DESTINATION_REPOSITORY_USERNAME="$DESTINATION_GITHUB_USERNAME"
+  COMMIT_USERNAME="$DESTINATION_USERNAME"
 fi
 
-CLONE_DIR=$(mktemp -d)
+CLONE_DIRECTORY=$(mktemp -d)
 
 echo "Cloning destination git repository"
 # Setup git
-git config --global user.email "$USER_EMAIL"
-git config --global user.name "$DESTINATION_GITHUB_USERNAME"
-git clone --single-branch --branch "$TARGET_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_REPOSITORY_USERNAME/$DESTINATION_REPOSITORY_NAME.git" "$CLONE_DIR"
-ls -la "$CLONE_DIR"
+git config --global user.email "$COMMIT_EMAIL"
+git config --global user.name "$DESTINATION_USERNAME"
+git clone --single-branch --branch "$DESTINATION_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_USERNAME/$DESTINATION_REPOSITORY.git" "$CLONE_DIRECTORY"
+ls -la "$CLONE_DIRECTORY"
 
 echo "Copying contents to git repo"
-mkdir -p "$CLONE_DIR/$DESTINATION_DIRECTORY"
-cp -rf $SOURCE_FILES "$CLONE_DIR/$DESTINATION_DIRECTORY"
-cd "$CLONE_DIR"
-
-echo "Files that will be pushed"
-ls -la
+mkdir -p "$CLONE_DIRECTORY/$DESTINATION_DIRECTORY"
+cp -rvf $SOURCE_FILES "$CLONE_DIRECTORY/$DESTINATION_DIRECTORY"
+cd "$CLONE_DIRECTORY"
 
 echo "Adding git commit"
 
@@ -43,9 +40,9 @@ COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
 git add .
 git status
 
-# git diff-index : to avoid doing the git commit failing if there are no changes to be commit
+# don't commit if no changes were made
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "Pushing git commit"
-# --set-upstream: sets de branch when pushing to a branch that does not exist
-git push origin --set-upstream "$TARGET_BRANCH"
+# --set-upstream: sets the branch when pushing to a branch that does not exist
+git push origin --set-upstream "$DESTINATION_BRANCH"
