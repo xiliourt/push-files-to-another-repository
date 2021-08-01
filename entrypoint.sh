@@ -3,7 +3,8 @@
 set -e  # if a command fails exit the script
 set -u  # script fails if trying to access an undefined variable
 
-echo "Starts"
+echo
+echo "##### Starting #####"
 SOURCE_FILES="$1"
 DESTINATION_USERNAME="$2"
 DESTINATION_REPOSITORY="$3"
@@ -20,19 +21,22 @@ fi
 
 CLONE_DIRECTORY=$(mktemp -d)
 
-echo "Cloning destination git repository"
+echo
+echo "##### Cloning destination git repository #####"
 # Setup git
 git config --global user.email "$COMMIT_EMAIL"
 git config --global user.name "$DESTINATION_USERNAME"
 git clone --single-branch --branch "$DESTINATION_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_USERNAME/$DESTINATION_REPOSITORY.git" "$CLONE_DIRECTORY"
 ls -la "$CLONE_DIRECTORY"
 
-echo "Copying contents to git repo"
+echo
+echo "##### Copying contents to git repo #####"
 mkdir -p "$CLONE_DIRECTORY/$DESTINATION_DIRECTORY"
 cp -rvf $SOURCE_FILES "$CLONE_DIRECTORY/$DESTINATION_DIRECTORY"
 cd "$CLONE_DIRECTORY"
 
-echo "Adding git commit"
+echo
+echo "##### Adding git commit #####"
 
 ORIGIN_COMMIT="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 COMMIT_MESSAGE="${COMMIT_MESSAGE/ORIGIN_COMMIT/$ORIGIN_COMMIT}"
@@ -43,6 +47,7 @@ git status
 # don't commit if no changes were made
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
-echo "Pushing git commit"
+echo
+echo "##### Pushing git commit #####"
 # --set-upstream: sets the branch when pushing to a branch that does not exist
 git push origin --set-upstream "$DESTINATION_BRANCH"
