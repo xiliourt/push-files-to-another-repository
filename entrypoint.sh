@@ -22,10 +22,22 @@ fi
 CLONE_DIRECTORY=$(mktemp -d)
 
 echo
-echo "##### Cloning destination git repository #####"
+echo "##### Cloning source git repository #####"
 # Setup git
 git config --global user.email "$COMMIT_EMAIL"
 git config --global user.name "$DESTINATION_USERNAME"
+
+# Remove git directory if it exists to prevent errors
+rm -rf .git
+
+git clone "https://github.com/$GITHUB_REPOSITORY.git" repo
+
+cd repo
+ls -la
+
+echo
+echo "##### Cloning destination git repository #####"
+
 git clone --single-branch --branch "$DESTINATION_BRANCH" "https://$API_TOKEN_GITHUB@github.com/$DESTINATION_USERNAME/$DESTINATION_REPOSITORY.git" "$CLONE_DIRECTORY"
 ls -la "$CLONE_DIRECTORY"
 
