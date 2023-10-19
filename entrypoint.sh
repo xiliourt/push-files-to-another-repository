@@ -25,7 +25,7 @@ echo
 echo "##### Cloning source git repository #####"
 # Setup git
 git config --global user.email "$COMMIT_EMAIL"
-git config --global user.name "$DESTINATION_USERNAME"
+git config --global user.name "$COMMIT_USERNAME"
 
 # Remove git directory if it exists to prevent errors
 rm -rf .git
