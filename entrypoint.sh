@@ -30,9 +30,7 @@ git config --global user.name "$COMMIT_USERNAME"
 # Remove git directory if it exists to prevent errors
 rm -rf .git
 
-git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_REPOSITORY.git" repo1
-
-mv repo1 repo
+git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_REPOSITORY.git" repo
 
 cd repo
 ls -la
@@ -65,3 +63,6 @@ echo
 echo "##### Pushing git commit #####"
 # --set-upstream: sets the branch when pushing to a branch that does not exist
 git push origin --set-upstream "$DESTINATION_BRANCH"
+
+cd ../
+rm -rf repo
