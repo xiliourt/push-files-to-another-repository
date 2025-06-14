@@ -13,6 +13,7 @@ DESTINATION_DIRECTORY="$5"
 COMMIT_USERNAME="$6"
 COMMIT_EMAIL="$7"
 COMMIT_MESSAGE="$8"
+STEP="$9"
 
 if [ -z "$COMMIT_USERNAME" ]
 then
@@ -30,9 +31,9 @@ git config --global user.name "$COMMIT_USERNAME"
 # Remove git directory if it exists to prevent errors
 rm -rf .git
 
-git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_REPOSITORY.git" repo
+git clone "https://$API_TOKEN_GITHUB@github.com/$GITHUB_REPOSITORY.git" $STEP
 
-cd repo
+cd $STEP
 ls -la
 
 echo
@@ -65,4 +66,3 @@ echo "##### Pushing git commit #####"
 git push origin --set-upstream "$DESTINATION_BRANCH"
 
 cd ../
-rm -rf repo
