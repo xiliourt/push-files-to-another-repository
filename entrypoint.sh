@@ -65,5 +65,3 @@ echo
 echo "##### Pushing git commit #####"
 # --set-upstream: sets the branch when pushing to a branch that does not exist
 git push origin --set-upstream "$DESTINATION_BRANCH"
-
-rm -rf repo
